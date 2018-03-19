@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LeskivSharp04.Properties
+namespace LeskivSharp02.Properties
 {
 
 
