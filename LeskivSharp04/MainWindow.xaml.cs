@@ -10,7 +10,8 @@ namespace LeskivSharp04
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new PersonRegisterViewModel(this);
+            DataContext = new MainViewModel();
+            Close();
         }
     }
 }

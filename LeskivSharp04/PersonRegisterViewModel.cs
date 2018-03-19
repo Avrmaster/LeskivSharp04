@@ -9,7 +9,7 @@ using LeskivSharp04.Annotations;
 namespace LeskivSharp04
 {
     // ReSharper disable ArrangeAccessorOwnerBody
-    class PersonRegisterViewModel : INotifyPropertyChanged
+    public class PersonRegisterViewModel : INotifyPropertyChanged
     {
         private readonly Window _parentWindow;
 
@@ -102,21 +102,26 @@ namespace LeskivSharp04
                 {
                     MessageBox.Show(e.Message);
                 }
-                
-                //save to database here :)
+                catch (Exception e)
+                {
+                    MessageBox.Show($"Erorr happened while saving profile: {e}");
+                }
             }));
-            if (person == null)
-                return;
+            if (person != null)
+                OpenPersonView(person);
+        }
 
-            PersonInfoWindow personInfoWindow = new PersonInfoWindow(person);
-
-            _parentWindow.Hide();
+        private void OpenPersonView([NotNull] Person person)
+        {
+            var personInfoWindow = new PersonInfoWindow(person);
+            _parentWindow.Close();
             personInfoWindow.Show();
         }
 
         internal PersonRegisterViewModel(Window parentWindow)
         {
             _parentWindow = parentWindow;
+            
         }
 
         #region Implementation

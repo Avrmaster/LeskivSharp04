@@ -5,7 +5,7 @@ using LeskivSharp04.Annotations;
 namespace LeskivSharp04
 {
     // ReSharper disable ArrangeAccessorOwnerBody
-    class PersonInfoViewModel : INotifyPropertyChanged
+    public class PersonInfoViewModel : INotifyPropertyChanged
     {
         private readonly Person _person;
 
@@ -25,7 +25,6 @@ namespace LeskivSharp04
 
         public event PropertyChangedEventHandler PropertyChanged;
         
-
         #region Implementation
         [NotifyPropertyChangedInvocator]
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

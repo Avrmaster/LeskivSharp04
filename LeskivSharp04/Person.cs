@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Windows.Media.Media3D;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading.Tasks;
+using LeskivSharp04.Annotations;
 
 namespace LeskivSharp04
 {
-
     public class PersonCreationException : Exception
     {
         public PersonCreationException(string message)
@@ -45,8 +49,12 @@ namespace LeskivSharp04
         }
     }
 
+    [Serializable]
     public class Person
     {
+        private static readonly string _DATA_FILEPATH = "database";
+        private static readonly string _PERSON_FILE_TEMPLATE = "p{0}.bin";
+
         internal readonly string Name;
         internal readonly string Surname;
         internal readonly string Email;
@@ -65,7 +73,7 @@ namespace LeskivSharp04
             }
 
             if (email.Length < 3 || email.Count(f => f == '@') != 1 ||
-                (email.IndexOf("@", StringComparison.Ordinal) ==  email.Length-1) ||
+                (email.IndexOf("@", StringComparison.Ordinal) == email.Length - 1) ||
                 (email.IndexOf("@", StringComparison.Ordinal) == 0))
             {
                 throw new WrongEmailException(email);
@@ -147,6 +155,201 @@ namespace LeskivSharp04
 
                 return WesternZodiaсs[westZodiacNum];
             }
+        }
+
+        private void SaveTo([NotNull] string filename)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Directory.CreateDirectory(Path.GetDirectoryName(filename) ?? throw new InvalidOperationException());
+            Stream stream = new FileStream(path: filename,
+                mode: FileMode.Create,
+                access: FileAccess.Write,
+                share: FileShare.None);
+            formatter.Serialize(serializationStream: stream, graph: this);
+            stream.Close();
+        }
+
+        private static Person LoadFrom(string filename)
+        {
+            try
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new FileStream(filename,
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.Read);
+                var person = (Person)formatter.Deserialize(stream);
+                stream.Close();
+                return person;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /**
+         * Loads the users from an existring 'database' (directory)
+         * If it doesn't exist, it's created with 50 default users
+         */
+        public static async void LoadAllInto(List<Person> persons)
+        {
+            await Task.Run(() =>
+            {
+                if (!Directory.Exists(_DATA_FILEPATH))
+                {
+                    Directory.CreateDirectory(_DATA_FILEPATH);
+                    persons = PersonSpawner.SpawnPersons(50);
+                    SaveAll(persons);
+                }
+                else
+                {
+                    persons.AddRange(Directory.EnumerateFiles(_DATA_FILEPATH).Select(LoadFrom));
+                }
+            });
+        }
+
+        public static void SaveAll([NotNull] List<Person> persons)
+        {
+            var i = 0;
+            persons.ForEach(delegate (Person p)
+            {
+                p.SaveTo(Path.Combine(_DATA_FILEPATH, string.Format(_PERSON_FILE_TEMPLATE, i++)));
+            });
+        }
+
+        private static class PersonSpawner
+        {
+            public static List<Person> SpawnPersons(int count)
+            {
+                var persons = new List<Person>();
+                var random = new Random();
+                for (var i = 0; i < count; ++i)
+                {
+                    persons.Add(new Person(Names[i], Surnames[i],
+                        $"{Names[i%Names.Length]}.{Surnames[i%Surnames.Length]}@{EmailsEndings[random.Next(EmailsEndings.Length)]}",
+                        DateTime.Now.AddYears(-random.Next(10, 80)).AddDays(-random.Next(31))
+                            .AddMonths(-random.Next(12))));
+                }
+
+                return persons;
+            }
+
+            private static readonly string[] Names =
+            {
+                "Oliver",
+                "Harry",
+                "George",
+                "Jack",
+                "Jacob",
+                "Noah",
+                "Charlie",
+                "Muhammed",
+                "Thomans",
+                "Oscar",
+                "William",
+                "James",
+                "Leo",
+                "Alfie",
+                "Henry",
+                "Joshua",
+                "Freddie",
+                "Archie",
+                "Ethan",
+                "Isaac",
+                "Alexander",
+                "Joseph",
+                "Edward",
+                "Samuel",
+                "Max",
+                "Logan",
+                "Lucas",
+                "Daniel",
+                "Theo",
+                "Arhur",
+                "Mohammed",
+                "Harrison",
+                "Benjamin",
+                "Mason",
+                "Finley",
+                "Sebastian",
+                "Adam",
+                "Dylan",
+                "Zachary",
+                "Riley",
+                "Teddy",
+                "Theodore",
+                "David",
+                "Elijah",
+                "Jake",
+                "Toby",
+                "Louie",
+                "Reuben",
+                "Arlo",
+                "Hugo"
+            };
+
+            private static readonly string[] Surnames =
+            {
+                "Smith",
+                "Johnson",
+                "Williams",
+                "Jones",
+                "Brown",
+                "Davis",
+                "Miller",
+                "Wilson",
+                "Moore",
+                "Taylor",
+                "Anderson",
+                "Thomas",
+                "Jackson",
+                "White",
+                "Harris",
+                "Martin",
+                "Thompson",
+                "Garcia",
+                "Martinez",
+                "Robinson",
+                "Clark",
+                "Rodriguez",
+                "Lewis",
+                "Lee",
+                "Walker",
+                "Hall",
+                "Allen",
+                "Young",
+                "Hernandez",
+                "King",
+                "Wright",
+                "Lopez",
+                "Hill",
+                "Scott",
+                "Green",
+                "Adams",
+                "Baker",
+                "Gonzalez",
+                "Nelson",
+                "Carter",
+                "Mitchell",
+                "Perez",
+                "Roberts",
+                "Turner",
+                "Phillips",
+                "Campbell",
+                "Parker",
+                "Evans",
+                "Edwards",
+                "Collins"
+            };
+
+            private static readonly string[] EmailsEndings =
+            {
+                "gmail.com",
+                "i.ua",
+                "yandex.ru",
+                "mail.ru"
+            };
         }
 
         private static readonly string[] WesternZodiaсs =
