@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using LeskivSharp02.Annotations;
+using LeskivSharp04.Annotations;
 
 namespace LeskivSharp04
 {

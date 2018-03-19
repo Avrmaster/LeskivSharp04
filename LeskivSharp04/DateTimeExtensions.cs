@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace LeskivSharp02
+namespace LeskivSharp04
 {
     public static class DateTimeExtensions
     {
