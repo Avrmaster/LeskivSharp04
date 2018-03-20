@@ -17,6 +17,9 @@ namespace LeskivSharp04
         private RelayCommand _editCommand;
         private RelayCommand _registerCommand;
 
+        public string SelectedSoftFilterProperty { get; set; }
+        public string FilterQuery { get; set; }
+
         private RelayCommand _sortCommand;
         private RelayCommand _filterCommand;
 
@@ -71,6 +74,28 @@ namespace LeskivSharp04
                 _updateUsersGrid();
             });
             registerWindow.Show();
+        }
+
+        public RelayCommand SortCommand =>
+            _sortCommand ?? (_sortCommand = new RelayCommand(SortImpl, o => !string.IsNullOrEmpty(SelectedSoftFilterProperty)));
+
+        private async void SortImpl(object o)
+        {
+            await Task.Run(() =>
+            {
+                MessageBox.Show($"Sort by {SelectedSoftFilterProperty}");
+            });
+        }
+
+        public RelayCommand FilterCommand =>
+            _filterCommand ?? (_filterCommand = new RelayCommand(FilterImpl, o => !string.IsNullOrEmpty(SelectedSoftFilterProperty) && !string.IsNullOrEmpty(FilterQuery)));
+
+        private async void FilterImpl(object o)
+        {
+            await Task.Run(() =>
+            {
+                MessageBox.Show($"Filter by {SelectedSoftFilterProperty}: {FilterQuery}");
+            });
         }
 
         public PersonsBrowseViewModel(Action updateGrid, Action<string> updateUserInfo)

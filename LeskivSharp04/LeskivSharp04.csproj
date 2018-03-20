@@ -101,7 +101,7 @@
     <Compile Include="PersonInfoWindow.xaml.cs">
       <DependentUpon>PersonInfoWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PersonRegisterViewModel.cs" />
+    <Compile Include="PersonRegisterEditViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

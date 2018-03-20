@@ -11,7 +11,7 @@ namespace LeskivSharp04
         public PersonRegisterEditWindow(Action<Person> onRegisterAction, Person person = null)
         {
             InitializeComponent();
-            DataContext = new PersonRegisterViewModel(person, delegate(Person newPerson)
+            DataContext = new PersonRegisterEditViewModel(person, delegate(Person newPerson)
             {
                 Close();
                 onRegisterAction(newPerson);

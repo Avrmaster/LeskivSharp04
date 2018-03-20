@@ -9,7 +9,7 @@ using LeskivSharp04.Annotations;
 namespace LeskivSharp04
 {
     // ReSharper disable ArrangeAccessorOwnerBody
-    public class PersonRegisterViewModel : INotifyPropertyChanged
+    public class PersonRegisterEditViewModel : INotifyPropertyChanged
     {
         private string _name;
         private string _surname;
@@ -110,7 +110,7 @@ namespace LeskivSharp04
             }
         }
         
-        internal PersonRegisterViewModel(Person person, Action<Person> onRegisterAction)
+        internal PersonRegisterEditViewModel(Person person, Action<Person> onRegisterAction)
         {
             if (person != null)
             {

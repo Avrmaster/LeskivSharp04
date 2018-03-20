@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeskivSharp04"
         mc:Ignorable="d"
-        Title="PersonsBrowseWindow" Height="640" Width="1200">
+        Title="PersonsBrowseWindow" Height="720" Width="1280">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="9*" />
@@ -27,43 +27,62 @@
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="0.75*"/>
                     <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="5*"/>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0">
-                    Chose the sorting property
-                </TextBlock>
-                <Slider Grid.Row="1"/>
-                <TextBlock Grid.Row="2">
-                    Sort by..
-                </TextBlock>
-                <Button Grid.Row="3">
+
+                <Label Grid.Row="0" Foreground="AliceBlue" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    Select property
+                </Label>
+                <ComboBox Grid.Row="1" FontSize="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                          Text="{Binding SelectedSoftFilterProperty, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                    <ComboBoxItem>
+                        Name
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Surname
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Email
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Birthday
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Is adult
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Is birthday
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Sun sign
+                    </ComboBoxItem>
+                    <ComboBoxItem>
+                        Chineese sign
+                    </ComboBoxItem>
+                </ComboBox>
+                
+                <Image Grid.Row="2" Source="advice.png"/>
+
+                <Button Grid.Row="3" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                        Command="{Binding SortCommand}">
                     Sort!
                 </Button>
-                
-                <Image Grid.Row="4" Source="advice.png"/>
-                
-                <TextBlock Grid.Row="5">
-                    Chose the filtering property
-                </TextBlock>
-                <Slider Grid.Row="6"/>
-                <TextBlock Grid.Row="7">
-                    Filter by..
-                </TextBlock>
-                <TextBox Grid.Row ="8">
-                    Filter by..
+
+                <TextBox Grid.Row="5" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                         FontStyle="Italic" Text="{Binding FilterQuery, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
-                <Button Grid.Row="9">
+
+                <Button Grid.Row="6" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+                        Command="{Binding FilterCommand}">
                     Filter!
                 </Button>
+
             </Grid>
             <ScrollViewer Grid.Column="1" Background="Transparent" HorizontalScrollBarVisibility="Auto">
                 <DataGrid x:Name="PersonsDataGrid"
