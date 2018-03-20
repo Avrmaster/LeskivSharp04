@@ -21,14 +21,55 @@
         </Grid.Background>
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="7*" />
-                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="1.5*" />
+                <ColumnDefinition Width="6.5*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <ScrollViewer Background="Transparent">
-                <DataGrid Grid.Column="0" x:Name="PersonsDataGrid"
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="5*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0">
+                    Chose the sorting property
+                </TextBlock>
+                <Slider Grid.Row="1"/>
+                <TextBlock Grid.Row="2">
+                    Sort by..
+                </TextBlock>
+                <Button Grid.Row="3">
+                    Sort!
+                </Button>
+                
+                <Image Grid.Row="4" Source="advice.png"/>
+                
+                <TextBlock Grid.Row="5">
+                    Chose the filtering property
+                </TextBlock>
+                <Slider Grid.Row="6"/>
+                <TextBlock Grid.Row="7">
+                    Filter by..
+                </TextBlock>
+                <TextBox Grid.Row ="8">
+                    Filter by..
+                </TextBox>
+                <Button Grid.Row="9">
+                    Filter!
+                </Button>
+            </Grid>
+            <ScrollViewer Grid.Column="1" Background="Transparent" HorizontalScrollBarVisibility="Auto">
+                <DataGrid x:Name="PersonsDataGrid"
                           HorizontalGridLinesBrush="DarkGray"
                           Background="Transparent" RowBackground="#5FFFFFFF"
-                          CanUserSortColumns="True" IsReadOnly="True"
+                          CanUserSortColumns="False" IsReadOnly="True"
                           AutoGenerateColumns="False" ItemsSource="{Binding PersonsList, Mode=OneTime}"
                           SelectedItem="{Binding SelectedPerson, Mode=OneWayToSource}">
                     <DataGrid.Columns>
@@ -43,7 +84,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
             </ScrollViewer>
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="7*" />
@@ -51,7 +92,6 @@
                         <RowDefinition Height="2*" />
                     </Grid.RowDefinitions>
                     <Image Grid.Row="0" Source="profile.png" />
-
                     <TextBlock Grid.Row="1" Name="UserShortTextBlock" Text="select a person" FontSize="30"
                                Margin="10"
                                Foreground="AliceBlue" Background="#15ffffff"
@@ -62,11 +102,11 @@
                             <ColumnDefinition Width="1*" />
                             <ColumnDefinition Width="1*" />
                         </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" FontSize="50" Background="Transparent" FontStyle="Italic"
+                        <Button Margin ="6" Grid.Column="0" FontSize="35" Background="Transparent" FontStyle="Italic"
                                 Foreground="AliceBlue" Command ="{Binding EditCommand}">
                             Edit
                         </Button>
-                        <Button Grid.Column="1" FontSize="50" Background="Transparent" FontStyle="Italic"
+                        <Button Margin ="6" Grid.Column="1" FontSize="35" Background="Transparent" FontStyle="Italic"
                                 Foreground="AliceBlue" Command ="{Binding DeleteCommand}">
                             Delete
                         </Button>
