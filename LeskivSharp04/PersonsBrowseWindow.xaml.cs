@@ -10,9 +10,7 @@ namespace LeskivSharp04
         public PersonsBrowseWindow()
         {
             InitializeComponent();
-            DataContext = new PersonsBrowseViewModel(
-                delegate() { Dispatcher.Invoke(PersonsDataGrid.Items.Refresh); },
-                delegate(string s) { Dispatcher.Invoke(() => { return UserShortTextBlock.Text = s; }); });
+            DataContext = new PersonsBrowseViewModel( delegate() { Dispatcher.Invoke(PersonsDataGrid.Items.Refresh); });
         }
     }
 }

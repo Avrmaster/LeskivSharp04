@@ -11,23 +11,27 @@ using LeskivSharp04.Annotations;
 namespace LeskivSharp04
 {
     class PersonsBrowseViewModel : INotifyPropertyChanged
-    {
+    {        
+        private List<Person> _personsList;
         private Person _selectedPerson;
-        private readonly Action _updateUsersGrid;
-        private readonly Action<string> _updateUserInfoInfoAction;
+        private readonly Action _refreshPersonsAction;
+        private string _filterQuery;
+
         private RelayCommand _deleteCommand;
         private RelayCommand _editCommand;
         private RelayCommand _registerCommand;
+        private RelayCommand _sortCommand;
+        private RelayCommand _clearFilterCommand;
 
         private static CollectionView _sortFilterOptionsCollection;
 
+        public string SelectedSoftFilterProperty { get; set; }
+
+        public string SelectedPersonShort { get; private set; }
+        
         public static CollectionView SortFilterOptions => _sortFilterOptionsCollection ??
                                                           (_sortFilterOptionsCollection =
                                                               new CollectionView(SortExtension.SortFiltertOptions));
-
-        private string _filterQuery;
-
-        public string SelectedSoftFilterProperty { get; set; }
 
         public string FilterQuery
         {
@@ -36,14 +40,9 @@ namespace LeskivSharp04
             {
                 _filterQuery = value;
                 SelectedPerson = null;
-                _updateUsersGrid();
+                UpdateUsersGrid();
             }
         }
-
-        private RelayCommand _sortCommand;
-        private RelayCommand _clearFilterCommand;
-
-        private List<Person> _personsList;
 
         public List<Person> PersonsListToShow =>
             (string.IsNullOrEmpty(SelectedSoftFilterProperty) || string.IsNullOrEmpty(FilterQuery))
@@ -56,8 +55,9 @@ namespace LeskivSharp04
             set
             {
                 _selectedPerson = value;
-                if (_selectedPerson != null)
-                    _updateUserInfoInfoAction($"{_selectedPerson.Name} {_selectedPerson.Surname}");
+                if (_selectedPerson == null) return;
+                SelectedPersonShort = $"{_selectedPerson.Name} {_selectedPerson.Surname}";
+                OnPropertyChanged($"SelectedPersonShort");
             }
         }
 
@@ -70,7 +70,7 @@ namespace LeskivSharp04
             {
                 //since it's exactly the same object
                 _personsList.Remove(SelectedPerson);
-                _updateUsersGrid();
+                UpdateUsersGrid();
             }));
         }
 
@@ -83,7 +83,7 @@ namespace LeskivSharp04
             var editWindow = new PersonRegisterEditWindow(delegate(Person edited)
             {
                 personToEdit.CopyFrom(edited);
-                _updateUsersGrid();
+                UpdateUsersGrid();
             }, _selectedPerson);
             editWindow.Show();
         }
@@ -96,7 +96,7 @@ namespace LeskivSharp04
             var registerWindow = new PersonRegisterEditWindow(delegate(Person newPerson)
             {
                 PersonsListToShow.Add(newPerson);
-                _updateUsersGrid();
+                UpdateUsersGrid();
             });
             registerWindow.Show();
         }
@@ -110,7 +110,7 @@ namespace LeskivSharp04
             await Task.Run(() =>
             {
                 _personsList = _personsList.SortBy(SelectedSoftFilterProperty);
-                _updateUsersGrid();
+                UpdateUsersGrid();
             });
         }
 
@@ -122,18 +122,18 @@ namespace LeskivSharp04
                 },
                 o => !string.IsNullOrEmpty(FilterQuery)));
 
-        public PersonsBrowseViewModel(Action updateGrid, Action<string> updateUserInfo)
+        private void UpdateUsersGrid()
         {
-            _personsList = new List<Person>();
-            Person.LoadAllInto(PersonsListToShow, updateGrid);
+            Person.SaveAll(_personsList);
+            OnPropertyChanged($"PersonsListToShow");
+            _refreshPersonsAction();
+        }
 
-            _updateUsersGrid = () =>
-            {
-                Person.SaveAll(_personsList);
-                OnPropertyChanged($"PersonsListToShow");
-                updateGrid();
-            };
-            _updateUserInfoInfoAction = updateUserInfo;
+        public PersonsBrowseViewModel(Action updateGridItems)
+        {
+            _refreshPersonsAction = updateGridItems;
+            _personsList = new List<Person>();
+            Person.LoadAllInto(PersonsListToShow, UpdateUsersGrid);
         }
 
         #region Implementation
