@@ -19,10 +19,14 @@ namespace LeskivSharp04
     /// </summary>
     public partial class PersonRegisterWindow : Window
     {
-        public PersonRegisterWindow()
+        public PersonRegisterWindow(Action<Person> onRegisterAction)
         {
             InitializeComponent();
-            DataContext = new PersonRegisterViewModel(this);
+            DataContext = new PersonRegisterViewModel(delegate(Person person)
+            {
+                Close();
+                onRegisterAction(person);
+            });
         }
     }
 }

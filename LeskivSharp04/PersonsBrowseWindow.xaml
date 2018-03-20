@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeskivSharp04"
         mc:Ignorable="d"
-        Title="PersonsBrowseWindow" Height="640" Width="840">
+        Title="PersonsBrowseWindow" Height="640" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="9*" />
@@ -13,30 +13,68 @@
         </Grid.RowDefinitions>
         <Grid.Background>
             <LinearGradientBrush>
-                <GradientStop Color="#6FB98F" Offset="0.0" />
+                <GradientStop Color="#4C8F69" Offset="0.0" />
                 <GradientStop Color="#004445" Offset="0.25" />
                 <GradientStop Color="#2C7873" Offset="0.75" />
                 <GradientStop Color="#021c1E" Offset="1.0" />
             </LinearGradientBrush>
         </Grid.Background>
-        <ScrollViewer Grid.Row="0" Background="Transparent">
-            <DataGrid x:Name="PersonsDataGrid" HorizontalGridLinesBrush="DarkGray" BeginningEdit="PersonsDataGrid_OnBeginningEdit"
-                      Foreground="AliceBlue"
-                      IsReadOnly="True" Sorting="PersonsDataGrid_OnSorting" Background="Transparent" RowBackground="Transparent"
-                      AutoGenerateColumns="False" ItemsSource="{Binding PersonsList, Mode=OneTime}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="First name" Binding="{Binding Path=Name}"/>
-                    <DataGridTextColumn Header="Last name" Binding="{Binding Path=Surname}" />
-                    <DataGridTextColumn Header="EMail" Binding="{Binding Path=Email}" />
-                    <DataGridTextColumn Header="Birth date" Binding="{Binding Path=Birthday}" />
-                    <DataGridTextColumn Header="isBirth" Binding="{Binding Path=IsBirthday}" />
-                    <DataGridTextColumn Header="isAdult" Binding="{Binding Path=IsAdult}" />
-                    <DataGridTextColumn Header="Sun sign" Binding="{Binding Path=SunSign}" />
-                    <DataGridTextColumn Header="Chinese sign" Binding="{Binding Path=ChineseSign}" />
-                </DataGrid.Columns>
-            </DataGrid>
-        </ScrollViewer>
-        <Button Grid.Row="1" Foreground="AliceBlue" FontSize="30" Background="Transparent">
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="7*" />
+                <ColumnDefinition Width="3*" />
+            </Grid.ColumnDefinitions>
+            <ScrollViewer Background="Transparent">
+                <DataGrid Grid.Column="0" x:Name="PersonsDataGrid"
+                          HorizontalGridLinesBrush="DarkGray"
+                          Background="Transparent" RowBackground="#5FFFFFFF"
+                          CanUserSortColumns="True" IsReadOnly="True"
+                          AutoGenerateColumns="False" ItemsSource="{Binding PersonsList, Mode=OneTime}"
+                          SelectedItem="{Binding SelectedPerson, Mode=OneWayToSource}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="First name" Binding="{Binding Path=Name}" />
+                        <DataGridTextColumn Header="Last name" Binding="{Binding Path=Surname}" />
+                        <DataGridTextColumn Header="EMail" Binding="{Binding Path=Email}" />
+                        <DataGridTextColumn Header="Birthday" Binding="{Binding Path=Birthday}" />
+                        <DataGridTextColumn Header="Sun sign" Binding="{Binding Path=SunSign}" />
+                        <DataGridTextColumn Header="Chinese sign" Binding="{Binding Path=ChineseSign}" />
+                        <DataGridTextColumn Header="BirthdayToday" Binding="{Binding Path=IsBirthday}" />
+                        <DataGridTextColumn Header="Adult" Binding="{Binding Path=IsAdult}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </ScrollViewer>
+            <Grid Grid.Column="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="7*" />
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="2*" />
+                    </Grid.RowDefinitions>
+                    <Image Grid.Row="0" Source="profile.png" />
+
+                    <TextBlock Grid.Row="1" Name="UserShortTextBlock" Text="select a person" FontSize="30"
+                               Margin="10"
+                               Foreground="AliceBlue" Background="#15ffffff"
+                               HorizontalAlignment="Center" VerticalAlignment="Bottom"
+                               FontStyle="Italic" />
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0" FontSize="50" Background="Transparent" FontStyle="Italic"
+                                Foreground="AliceBlue" Command ="{Binding EditCommand}">
+                            Edit
+                        </Button>
+                        <Button Grid.Column="1" FontSize="50" Background="Transparent" FontStyle="Italic"
+                                Foreground="AliceBlue" Command ="{Binding DeleteCommand}">
+                            Delete
+                        </Button>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Button Grid.Row="1" Foreground="AliceBlue" FontSize="40" Background="Transparent" FontStyle="Italic" Command ="{Binding RegisterCommand}">
             Register new Person
         </Button>
     </Grid>

@@ -94,7 +94,6 @@ namespace LeskivSharp04
             Surname = surname;
             Email = email;
             Birthday = birthday;
-            MessageBox.Show($"Created person {name}");
         }
 
         public Person(string name, string surname, string email) : this(name, surname, email, DateTime.Today)
@@ -202,7 +201,6 @@ namespace LeskivSharp04
         {
             await Task.Run(() =>
             {
-                Thread.Sleep(1000);
                 if (!Directory.Exists(DataFilepath))
                 {
                     Directory.CreateDirectory(DataFilepath);
@@ -234,8 +232,11 @@ namespace LeskivSharp04
                 var random = new Random();
                 for (var i = 0; i < count; ++i)
                 {
-                    persons.Add(new Person(Names[i], Surnames[i],
-                        $"{Names[i%Names.Length]}.{Surnames[i%Surnames.Length]}@{EmailsEndings[random.Next(EmailsEndings.Length)]}",
+                    var name = Names[random.Next(Names.Length)];
+                    var surname = Surnames[random.Next(Surnames.Length)];
+
+                    persons.Add(new Person(name, surname,
+                        $"{name}.{surname}@{EmailsEndings[random.Next(EmailsEndings.Length)]}",
                         DateTime.Now.AddYears(-random.Next(10, 80)).AddDays(-random.Next(31))
                             .AddMonths(-random.Next(12))));
                 }

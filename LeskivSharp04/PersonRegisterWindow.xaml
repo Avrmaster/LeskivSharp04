@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeskivSharp04"
         mc:Ignorable="d"
-        Title="Register" Height="640" Width="548">
+        Title="Register/Edit" Height="640" Width="548">
     <ScrollViewer>
         <Grid>
             <Grid.Background>

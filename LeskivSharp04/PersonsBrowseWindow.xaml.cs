@@ -1,6 +1,4 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 
 namespace LeskivSharp04
 {
@@ -12,17 +10,9 @@ namespace LeskivSharp04
         public PersonsBrowseWindow()
         {
             InitializeComponent();
-            DataContext = new PersonsBrowseViewModel(delegate() { Dispatcher.Invoke(PersonsDataGrid.Items.Refresh); });
-        }
-        
-        private void PersonsDataGrid_OnBeginningEdit(object sender, DataGridBeginningEditEventArgs e)
-        {
-            MessageBox.Show("Beginning editing");
-        }
-
-        private void PersonsDataGrid_OnSorting(object sender, DataGridSortingEventArgs e)
-        {
-            MessageBox.Show("On sorting");
+            DataContext = new PersonsBrowseViewModel(
+                delegate() { Dispatcher.Invoke(PersonsDataGrid.Items.Refresh); },
+                delegate(string s) { Dispatcher.Invoke(() => { return UserShortTextBlock.Text = s; }); });
         }
     }
 }

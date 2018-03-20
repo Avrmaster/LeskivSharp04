@@ -11,13 +11,12 @@ namespace LeskivSharp04
     // ReSharper disable ArrangeAccessorOwnerBody
     public class PersonRegisterViewModel : INotifyPropertyChanged
     {
-        private readonly Window _parentWindow;
-
         private string _name;
         private string _surname;
         private string _email;
         private DateTime _birthDate = DateTime.Today;
         private RelayCommand _signInCommand;
+        private Action<Person> _onRegisterAction;
 
         public string Name
         {
@@ -90,8 +89,7 @@ namespace LeskivSharp04
         private async void RegisterImpl(object o)
         {
             Person person = null;
-            //TODO block "proceed" button here
-
+            
             await Task.Run((() =>
             {
                 try
@@ -108,20 +106,14 @@ namespace LeskivSharp04
                 }
             }));
             if (person != null)
-                OpenPersonView(person);
+            {
+                _onRegisterAction(person);
+            }
         }
-
-        private void OpenPersonView([NotNull] Person person)
+        
+        internal PersonRegisterViewModel(Action<Person> onRegisterAction)
         {
-            var personInfoWindow = new PersonInfoWindow(person);
-            _parentWindow.Close();
-            personInfoWindow.Show();
-        }
-
-        internal PersonRegisterViewModel(Window parentWindow)
-        {
-            _parentWindow = parentWindow;
-            
+            _onRegisterAction = onRegisterAction;
         }
 
         #region Implementation

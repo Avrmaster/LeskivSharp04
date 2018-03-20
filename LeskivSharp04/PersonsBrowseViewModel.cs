@@ -2,21 +2,73 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
 using LeskivSharp04.Annotations;
 
 namespace LeskivSharp04
 {
     class PersonsBrowseViewModel : INotifyPropertyChanged
     {
+        private Person _selectedPerson;
+        private readonly Action _updateUsersGrid;
+        private readonly Action<string> _updateUserInfoInfoAction;
+        private RelayCommand _deleteCommand;
+        private RelayCommand _editCommand;
+        private RelayCommand _registerCommand;
+
+        private RelayCommand _sortCommand;
+        private RelayCommand _filterCommand;
+
         public List<Person> PersonsList { get; }
 
-        public PersonsBrowseViewModel(Action updateGrid)
+        public Person SelectedPerson
+        {
+            get => _selectedPerson;
+            set
+            {
+                _selectedPerson = value;
+                if (_selectedPerson != null)
+                    _updateUserInfoInfoAction($"{_selectedPerson.Name} {_selectedPerson.Surname}");
+            }
+        }
+
+        public RelayCommand DeleteCommand =>
+            _deleteCommand ?? (_deleteCommand = new RelayCommand(DeleteImpl, o => _selectedPerson != null));
+
+        private async void DeleteImpl(object o)
+        {
+            await Task.Run((() => { MessageBox.Show("DELETE"); }));
+        }
+
+        public RelayCommand EditCommand =>
+            _editCommand ?? (_editCommand = new RelayCommand(EditImpl, o => _selectedPerson != null));
+
+        private async void EditImpl(object o)
+        {
+            await Task.Run((() => { MessageBox.Show("EDIT"); }));
+        }
+
+        public RelayCommand RegisterCommand =>
+            _registerCommand ?? (_registerCommand = new RelayCommand(RegisterImpl, o => true));
+
+        private void RegisterImpl(object o)
+        {
+            var registerWindow = new PersonRegisterWindow(delegate(Person newPerson)
+            {
+                PersonsList.Add(newPerson);
+                _updateUsersGrid();
+            });
+            registerWindow.Show();
+        }
+
+        public PersonsBrowseViewModel(Action updateGrid, Action<string> updateUserInfo)
         {
             PersonsList = new List<Person>();
             Person.LoadAllInto(PersonsList, updateGrid);
+
+            _updateUsersGrid = updateGrid;
+            _updateUserInfoInfoAction = updateUserInfo;
         }
 
         #region Implementation
