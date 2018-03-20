@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LeskivSharp04"
         mc:Ignorable="d"
-        Title="PersonsBrowseWindow" Height="640" Width="548">
+        Title="PersonsBrowseWindow" Height="640" Width="840">
     <ScrollViewer>
         <ScrollViewer.Background>
             <LinearGradientBrush>
@@ -15,11 +15,17 @@
                 <GradientStop Color="#021c1E" Offset="1.0" />
             </LinearGradientBrush>
         </ScrollViewer.Background>
-        <DataGrid x:Name="phonesGrid" AutoGenerateColumns="False" ItemsSource="{DynamicResource ResourceKey=phones}">
+        <DataGrid x:Name="PersonsDataGrid" HorizontalGridLinesBrush="DarkGray"
+                  AutoGenerateColumns="False" ItemsSource="{Binding PersonsList, Mode=OneTime}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Модель" Binding="{Binding Path=Title}" Width="90" />
-                <DataGridHyperlinkColumn Header="Компания" Binding="{Binding Path=Company}" Width="80" />
-                <DataGridTextColumn Header="Цена" Binding="{Binding Path=Price}" Width="50" />
+                <DataGridTextColumn Header="First name" Binding="{Binding Path=Name}" />
+                <DataGridTextColumn Header="Last name" Binding="{Binding Path=Surname}" />
+                <DataGridTextColumn Header="EMail" Binding="{Binding Path=Email}" />
+                <DataGridTextColumn Header="Birth date" Binding="{Binding Path=Birthday}" />
+                <DataGridTextColumn Header="isBirth" Binding="{Binding Path=IsBirthday}" />
+                <DataGridTextColumn Header="isAdult" Binding="{Binding Path=IsAdult}" />
+                <DataGridTextColumn Header="Sun sign" Binding="{Binding Path=SunSign}" />
+                <DataGridTextColumn Header="Chinese sign" Binding="{Binding Path=ChineseSign}" />
             </DataGrid.Columns>
         </DataGrid>
     </ScrollViewer>

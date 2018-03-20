@@ -1,22 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using LeskivSharp04.Annotations;
 
 namespace LeskivSharp04
 {
     class PersonsBrowseViewModel : INotifyPropertyChanged
     {
-        public readonly List<Person> PersonsList;
+        public List<Person> PersonsList { get; }
 
-        public PersonsBrowseViewModel()
+        public PersonsBrowseViewModel(Action updateGrid)
         {
             PersonsList = new List<Person>();
-            Person.LoadAllInto(PersonsList);
+            Person.LoadAllInto(PersonsList, updateGrid);
         }
 
-
         #region Implementation
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -24,6 +28,7 @@ namespace LeskivSharp04
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         #endregion
     }
 }

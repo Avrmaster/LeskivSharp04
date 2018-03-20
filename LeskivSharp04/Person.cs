@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using LeskivSharp04.Annotations;
 
 namespace LeskivSharp04
@@ -52,24 +54,27 @@ namespace LeskivSharp04
     [Serializable]
     public class Person
     {
-        private static readonly string _DATA_FILEPATH = "database";
-        private static readonly string _PERSON_FILE_TEMPLATE = "p{0}.bin";
+        private const string DataFilepath = "database";
+        private const string PersonFileTemplate = "p{0}.bin";
 
-        internal readonly string Name;
-        internal readonly string Surname;
-        internal readonly string Email;
-        internal readonly DateTime Birthday;
+        public string Name { get; }
+
+        public string Surname { get; }
+
+        public string Email { get; }
+
+        public DateTime Birthday { get; }
 
         public Person(string name, string surname, string email, DateTime birthday)
         {
             if (name.Length < 2)
             {
-                throw new WrongNameException($"Name {name} is too small!");
+                throw new WrongNameException($"_name {name} is too small!");
             }
 
             if (surname.Length < 2)
             {
-                throw new WrongSurnameException($"Surname {surname} is too small!");
+                throw new WrongSurnameException($"_surname {surname} is too small!");
             }
 
             if (email.Length < 3 || email.Count(f => f == '@') != 1 ||
@@ -89,6 +94,7 @@ namespace LeskivSharp04
             Surname = surname;
             Email = email;
             Birthday = birthday;
+            MessageBox.Show($"Created person {name}");
         }
 
         public Person(string name, string surname, string email) : this(name, surname, email, DateTime.Today)
@@ -192,20 +198,22 @@ namespace LeskivSharp04
          * Loads the users from an existring 'database' (directory)
          * If it doesn't exist, it's created with 50 default users
          */
-        public static async void LoadAllInto(List<Person> persons)
+        public static async void LoadAllInto(List<Person> persons, Action action)
         {
             await Task.Run(() =>
             {
-                if (!Directory.Exists(_DATA_FILEPATH))
+                Thread.Sleep(1000);
+                if (!Directory.Exists(DataFilepath))
                 {
-                    Directory.CreateDirectory(_DATA_FILEPATH);
+                    Directory.CreateDirectory(DataFilepath);
                     persons = PersonSpawner.SpawnPersons(50);
                     SaveAll(persons);
                 }
                 else
                 {
-                    persons.AddRange(Directory.EnumerateFiles(_DATA_FILEPATH).Select(LoadFrom));
+                    persons.AddRange(Directory.EnumerateFiles(DataFilepath).Select(LoadFrom));
                 }
+                action();
             });
         }
 
@@ -214,7 +222,7 @@ namespace LeskivSharp04
             var i = 0;
             persons.ForEach(delegate (Person p)
             {
-                p.SaveTo(Path.Combine(_DATA_FILEPATH, string.Format(_PERSON_FILE_TEMPLATE, i++)));
+                p.SaveTo(Path.Combine(DataFilepath, string.Format(PersonFileTemplate, i++)));
             });
         }
 
