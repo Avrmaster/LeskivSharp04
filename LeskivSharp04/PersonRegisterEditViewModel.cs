@@ -16,7 +16,7 @@ namespace LeskivSharp04
         private string _email;
         private DateTime _birthDate = DateTime.Today;
         private RelayCommand _signInCommand;
-        private Action<Person> _onRegisterAction;
+        private readonly Action<Person> _onRegisterAction;
 
         public string Name
         {

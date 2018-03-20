@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 using LeskivSharp04.Annotations;
 
@@ -16,6 +14,7 @@ namespace LeskivSharp04
         private Person _selectedPerson;
         private readonly Action _refreshPersonsAction;
         private string _filterQuery;
+        private bool _sortingAsc = true;
 
         private RelayCommand _deleteCommand;
         private RelayCommand _editCommand;
@@ -47,7 +46,7 @@ namespace LeskivSharp04
         public List<Person> PersonsListToShow =>
             (string.IsNullOrEmpty(SelectedSoftFilterProperty) || string.IsNullOrEmpty(FilterQuery))
                 ? _personsList
-                : _personsList.FilterBy(SelectedSoftFilterProperty, FilterQuery);
+                : _personsList.FilterByProperty(SelectedSoftFilterProperty, FilterQuery);
 
         public Person SelectedPerson
         {
@@ -109,7 +108,8 @@ namespace LeskivSharp04
         {
             await Task.Run(() =>
             {
-                _personsList = _personsList.SortBy(SelectedSoftFilterProperty);
+                _personsList = _personsList.SortByProperty(SelectedSoftFilterProperty, _sortingAsc);
+                _sortingAsc = !_sortingAsc;
                 UpdateUsersGrid();
             });
         }
