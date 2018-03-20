@@ -171,14 +171,21 @@ namespace LeskivSharp04
 
         private void SaveTo([NotNull] string filename)
         {
-            IFormatter formatter = new BinaryFormatter();
-            Directory.CreateDirectory(Path.GetDirectoryName(filename) ?? throw new InvalidOperationException());
-            Stream stream = new FileStream(path: filename,
-                mode: FileMode.Create,
-                access: FileAccess.Write,
-                share: FileShare.None);
-            formatter.Serialize(serializationStream: stream, graph: this);
-            stream.Close();
+            try
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Directory.CreateDirectory(Path.GetDirectoryName(filename) ?? throw new InvalidOperationException());
+                Stream stream = new FileStream(path: filename,
+                    mode: FileMode.Create,
+                    access: FileAccess.Write,
+                    share: FileShare.None);
+                formatter.Serialize(serializationStream: stream, graph: this);
+                stream.Close();
+            }
+            catch (IOException e)
+            {
+
+            }
         }
 
         private static Person LoadFrom(string filename)

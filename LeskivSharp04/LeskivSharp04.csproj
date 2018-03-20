@@ -74,7 +74,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DateTimeExtensions.cs" />
-    <Compile Include="PersonInfoViewModel.cs" />
     <Compile Include="PersonRegisterEditWindow.xaml.cs">
       <DependentUpon>PersonRegisterEditWindow.xaml</DependentUpon>
     </Compile>
@@ -83,10 +82,7 @@
       <DependentUpon>PersonsBrowseWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="RelayCommand.cs" />
-    <Page Include="PersonInfoWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
+    <Compile Include="SortFilterExtensions.cs" />
     <Page Include="PersonRegisterEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -98,9 +94,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Person.cs" />
-    <Compile Include="PersonInfoWindow.xaml.cs">
-      <DependentUpon>PersonInfoWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="PersonRegisterEditViewModel.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">

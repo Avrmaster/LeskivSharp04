@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using LeskivSharp04.Annotations;
 
 namespace LeskivSharp04
@@ -17,13 +19,36 @@ namespace LeskivSharp04
         private RelayCommand _editCommand;
         private RelayCommand _registerCommand;
 
+        private static CollectionView _sortFilterOptionsCollection;
+
+        public static CollectionView SortFilterOptions => _sortFilterOptionsCollection ??
+                                                          (_sortFilterOptionsCollection =
+                                                              new CollectionView(SortExtension.SortFiltertOptions));
+
+        private string _filterQuery;
+
         public string SelectedSoftFilterProperty { get; set; }
-        public string FilterQuery { get; set; }
+
+        public string FilterQuery
+        {
+            get => _filterQuery;
+            set
+            {
+                _filterQuery = value;
+                SelectedPerson = null;
+                _updateUsersGrid();
+            }
+        }
 
         private RelayCommand _sortCommand;
-        private RelayCommand _filterCommand;
+        private RelayCommand _clearFilterCommand;
 
-        public List<Person> PersonsList { get; }
+        private List<Person> _personsList;
+
+        public List<Person> PersonsListToShow =>
+            (string.IsNullOrEmpty(SelectedSoftFilterProperty) || string.IsNullOrEmpty(FilterQuery))
+                ? _personsList
+                : _personsList.FilterBy(SelectedSoftFilterProperty, FilterQuery);
 
         public Person SelectedPerson
         {
@@ -44,7 +69,7 @@ namespace LeskivSharp04
             await Task.Run((() =>
             {
                 //since it's exactly the same object
-                PersonsList.Remove(SelectedPerson);
+                _personsList.Remove(SelectedPerson);
                 _updateUsersGrid();
             }));
         }
@@ -70,42 +95,42 @@ namespace LeskivSharp04
         {
             var registerWindow = new PersonRegisterEditWindow(delegate(Person newPerson)
             {
-                PersonsList.Add(newPerson);
+                PersonsListToShow.Add(newPerson);
                 _updateUsersGrid();
             });
             registerWindow.Show();
         }
 
         public RelayCommand SortCommand =>
-            _sortCommand ?? (_sortCommand = new RelayCommand(SortImpl, o => !string.IsNullOrEmpty(SelectedSoftFilterProperty)));
+            _sortCommand ?? (_sortCommand =
+                new RelayCommand(SortImpl, o => !string.IsNullOrEmpty(SelectedSoftFilterProperty)));
 
         private async void SortImpl(object o)
         {
             await Task.Run(() =>
             {
-                MessageBox.Show($"Sort by {SelectedSoftFilterProperty}");
+                _personsList = _personsList.SortBy(SelectedSoftFilterProperty);
+                _updateUsersGrid();
             });
         }
 
-        public RelayCommand FilterCommand =>
-            _filterCommand ?? (_filterCommand = new RelayCommand(FilterImpl, o => !string.IsNullOrEmpty(SelectedSoftFilterProperty) && !string.IsNullOrEmpty(FilterQuery)));
-
-        private async void FilterImpl(object o)
-        {
-            await Task.Run(() =>
-            {
-                MessageBox.Show($"Filter by {SelectedSoftFilterProperty}: {FilterQuery}");
-            });
-        }
+        public RelayCommand ClearFilterCommand =>
+            _clearFilterCommand ?? (_clearFilterCommand = new RelayCommand((o) =>
+                {
+                    FilterQuery = "";
+                    OnPropertyChanged($"FilterQuery");
+                },
+                o => !string.IsNullOrEmpty(FilterQuery)));
 
         public PersonsBrowseViewModel(Action updateGrid, Action<string> updateUserInfo)
         {
-            PersonsList = new List<Person>();
-            Person.LoadAllInto(PersonsList, updateGrid);
+            _personsList = new List<Person>();
+            Person.LoadAllInto(PersonsListToShow, updateGrid);
 
             _updateUsersGrid = () =>
             {
-                Person.SaveAll(PersonsList);
+                Person.SaveAll(_personsList);
+                OnPropertyChanged($"PersonsListToShow");
                 updateGrid();
             };
             _updateUserInfoInfoAction = updateUserInfo;

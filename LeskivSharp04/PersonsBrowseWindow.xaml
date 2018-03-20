@@ -30,41 +30,19 @@
                     <RowDefinition Height="0.75*"/>
                     <RowDefinition Height="1*"/>
                     <RowDefinition Height="2*"/>
+                    <RowDefinition Height="0.6*"/>
                     <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
-                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="0.6*"/>
+                    <RowDefinition Height="0.6*"/>
                 </Grid.RowDefinitions>
 
                 <Label Grid.Row="0" Foreground="AliceBlue" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center">
                     Select property
                 </Label>
                 <ComboBox Grid.Row="1" FontSize="30" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                          Text="{Binding SelectedSoftFilterProperty, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
-                    <ComboBoxItem>
-                        Name
-                    </ComboBoxItem>
-                    <ComboBoxItem>
-                        Surname
-                    </ComboBoxItem>
-                    <ComboBoxItem>
-                        Email
-                    </ComboBoxItem>
-                    <ComboBoxItem>
-                        Birthday
-                    </ComboBoxItem>
-                    <ComboBoxItem>
-                        Is adult
-                    </ComboBoxItem>
-                    <ComboBoxItem>
-                        Is birthday
-                    </ComboBoxItem>
-                    <ComboBoxItem>
-                        Sun sign
-                    </ComboBoxItem>
-                    <ComboBoxItem>
-                        Chineese sign
-                    </ComboBoxItem>
+                          Text="{Binding SelectedSoftFilterProperty, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"
+                          ItemsSource="{Binding Path=SortFilterOptions}">
+                    
                 </ComboBox>
                 
                 <Image Grid.Row="2" Source="advice.png"/>
@@ -75,12 +53,12 @@
                 </Button>
 
                 <TextBox Grid.Row="5" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                         FontStyle="Italic" Text="{Binding FilterQuery, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}">
+                         FontStyle="Italic" Text="{Binding FilterQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                 </TextBox>
 
                 <Button Grid.Row="6" FontSize="20" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-                        Command="{Binding FilterCommand}">
-                    Filter!
+                        Command="{Binding ClearFilterCommand }">
+                    Clear filter
                 </Button>
 
             </Grid>
@@ -89,7 +67,7 @@
                           HorizontalGridLinesBrush="DarkGray"
                           Background="Transparent" RowBackground="#5FFFFFFF"
                           CanUserSortColumns="False" IsReadOnly="True"
-                          AutoGenerateColumns="False" ItemsSource="{Binding PersonsList, Mode=OneTime}"
+                          AutoGenerateColumns="False" ItemsSource="{Binding PersonsListToShow, Mode=OneWay}"
                           SelectedItem="{Binding SelectedPerson, Mode=OneWayToSource}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="First name" Binding="{Binding Path=Name}" />
