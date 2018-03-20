@@ -6,27 +6,38 @@
         xmlns:local="clr-namespace:LeskivSharp04"
         mc:Ignorable="d"
         Title="PersonsBrowseWindow" Height="640" Width="840">
-    <ScrollViewer>
-        <ScrollViewer.Background>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Grid.Background>
             <LinearGradientBrush>
                 <GradientStop Color="#6FB98F" Offset="0.0" />
                 <GradientStop Color="#004445" Offset="0.25" />
                 <GradientStop Color="#2C7873" Offset="0.75" />
                 <GradientStop Color="#021c1E" Offset="1.0" />
             </LinearGradientBrush>
-        </ScrollViewer.Background>
-        <DataGrid x:Name="PersonsDataGrid" HorizontalGridLinesBrush="DarkGray"
-                  AutoGenerateColumns="False" ItemsSource="{Binding PersonsList, Mode=OneTime}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="First name" Binding="{Binding Path=Name}" />
-                <DataGridTextColumn Header="Last name" Binding="{Binding Path=Surname}" />
-                <DataGridTextColumn Header="EMail" Binding="{Binding Path=Email}" />
-                <DataGridTextColumn Header="Birth date" Binding="{Binding Path=Birthday}" />
-                <DataGridTextColumn Header="isBirth" Binding="{Binding Path=IsBirthday}" />
-                <DataGridTextColumn Header="isAdult" Binding="{Binding Path=IsAdult}" />
-                <DataGridTextColumn Header="Sun sign" Binding="{Binding Path=SunSign}" />
-                <DataGridTextColumn Header="Chinese sign" Binding="{Binding Path=ChineseSign}" />
-            </DataGrid.Columns>
-        </DataGrid>
-    </ScrollViewer>
+        </Grid.Background>
+        <ScrollViewer Grid.Row="0" Background="Transparent">
+            <DataGrid x:Name="PersonsDataGrid" HorizontalGridLinesBrush="DarkGray" BeginningEdit="PersonsDataGrid_OnBeginningEdit"
+                      Foreground="AliceBlue"
+                      IsReadOnly="True" Sorting="PersonsDataGrid_OnSorting" Background="Transparent" RowBackground="Transparent"
+                      AutoGenerateColumns="False" ItemsSource="{Binding PersonsList, Mode=OneTime}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="First name" Binding="{Binding Path=Name}"/>
+                    <DataGridTextColumn Header="Last name" Binding="{Binding Path=Surname}" />
+                    <DataGridTextColumn Header="EMail" Binding="{Binding Path=Email}" />
+                    <DataGridTextColumn Header="Birth date" Binding="{Binding Path=Birthday}" />
+                    <DataGridTextColumn Header="isBirth" Binding="{Binding Path=IsBirthday}" />
+                    <DataGridTextColumn Header="isAdult" Binding="{Binding Path=IsAdult}" />
+                    <DataGridTextColumn Header="Sun sign" Binding="{Binding Path=SunSign}" />
+                    <DataGridTextColumn Header="Chinese sign" Binding="{Binding Path=ChineseSign}" />
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+        <Button Grid.Row="1" Foreground="AliceBlue" FontSize="30" Background="Transparent">
+            Register new Person
+        </Button>
+    </Grid>
 </Window>
