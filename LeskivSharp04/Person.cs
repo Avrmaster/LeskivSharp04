@@ -4,9 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using LeskivSharp04.Annotations;
 
 namespace LeskivSharp04
@@ -57,13 +55,13 @@ namespace LeskivSharp04
         private const string DataFilepath = "database";
         private const string PersonFileTemplate = "p{0}.bin";
 
-        public string Name { get; }
+        public string Name { get; private set; }
 
-        public string Surname { get; }
+        public string Surname { get; private set; }
 
-        public string Email { get; }
+        public string Email { get; private set; }
 
-        public DateTime Birthday { get; }
+        public DateTime Birthday { get; private set; }
 
         public Person(string name, string surname, string email, DateTime birthday)
         {
@@ -162,6 +160,14 @@ namespace LeskivSharp04
             }
         }
 
+        public void CopyFrom(Person person)
+        {
+            Name = person.Name;
+            Surname = person.Surname;
+            Email = person.Email;
+            Birthday = person.Birthday;
+        }
+
         private void SaveTo([NotNull] string filename)
         {
             IFormatter formatter = new BinaryFormatter();
@@ -222,6 +228,9 @@ namespace LeskivSharp04
             {
                 p.SaveTo(Path.Combine(DataFilepath, string.Format(PersonFileTemplate, i++)));
             });
+            string extraFile;
+            while (File.Exists(extraFile = Path.Combine(DataFilepath, string.Format(PersonFileTemplate, i++))))
+                File.Delete(extraFile);
         }
 
         private static class PersonSpawner

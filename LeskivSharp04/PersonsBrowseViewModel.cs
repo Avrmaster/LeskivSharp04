@@ -38,15 +38,26 @@ namespace LeskivSharp04
 
         private async void DeleteImpl(object o)
         {
-            await Task.Run((() => { MessageBox.Show("DELETE"); }));
+            await Task.Run((() =>
+            {
+                //since it's exactly the same object
+                PersonsList.Remove(SelectedPerson);
+                _updateUsersGrid();
+            }));
         }
 
         public RelayCommand EditCommand =>
             _editCommand ?? (_editCommand = new RelayCommand(EditImpl, o => _selectedPerson != null));
 
-        private async void EditImpl(object o)
+        private void EditImpl(object o)
         {
-            await Task.Run((() => { MessageBox.Show("EDIT"); }));
+            var personToEdit = _selectedPerson;
+            var editWindow = new PersonRegisterEditWindow(delegate(Person edited)
+            {
+                personToEdit.CopyFrom(edited);
+                _updateUsersGrid();
+            }, _selectedPerson);
+            editWindow.Show();
         }
 
         public RelayCommand RegisterCommand =>
@@ -54,7 +65,7 @@ namespace LeskivSharp04
 
         private void RegisterImpl(object o)
         {
-            var registerWindow = new PersonRegisterWindow(delegate(Person newPerson)
+            var registerWindow = new PersonRegisterEditWindow(delegate(Person newPerson)
             {
                 PersonsList.Add(newPerson);
                 _updateUsersGrid();
@@ -67,7 +78,11 @@ namespace LeskivSharp04
             PersonsList = new List<Person>();
             Person.LoadAllInto(PersonsList, updateGrid);
 
-            _updateUsersGrid = updateGrid;
+            _updateUsersGrid = () =>
+            {
+                Person.SaveAll(PersonsList);
+                updateGrid();
+            };
             _updateUserInfoInfoAction = updateUserInfo;
         }
 

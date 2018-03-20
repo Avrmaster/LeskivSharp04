@@ -89,7 +89,6 @@ namespace LeskivSharp04
         private async void RegisterImpl(object o)
         {
             Person person = null;
-            
             await Task.Run((() =>
             {
                 try
@@ -111,8 +110,15 @@ namespace LeskivSharp04
             }
         }
         
-        internal PersonRegisterViewModel(Action<Person> onRegisterAction)
+        internal PersonRegisterViewModel(Person person, Action<Person> onRegisterAction)
         {
+            if (person != null)
+            {
+                Name = person.Name;
+                Surname = person.Surname;
+                Email = person.Email;
+                BirthDate = person.Birthday;
+            }
             _onRegisterAction = onRegisterAction;
         }
 

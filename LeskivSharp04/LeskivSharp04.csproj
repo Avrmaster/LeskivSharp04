@@ -75,8 +75,8 @@
     </Compile>
     <Compile Include="DateTimeExtensions.cs" />
     <Compile Include="PersonInfoViewModel.cs" />
-    <Compile Include="PersonRegisterWindow.xaml.cs">
-      <DependentUpon>PersonRegisterWindow.xaml</DependentUpon>
+    <Compile Include="PersonRegisterEditWindow.xaml.cs">
+      <DependentUpon>PersonRegisterEditWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="PersonsBrowseViewModel.cs" />
     <Compile Include="PersonsBrowseWindow.xaml.cs">
@@ -87,7 +87,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="PersonRegisterWindow.xaml">
+    <Page Include="PersonRegisterEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
