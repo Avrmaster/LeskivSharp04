@@ -210,7 +210,7 @@ namespace LeskivSharp04
                 if (!Directory.Exists(DataFilepath))
                 {
                     Directory.CreateDirectory(DataFilepath);
-                    persons = PersonSpawner.SpawnPersons(50);
+                    persons.AddRange(PersonSpawner.SpawnPersons(50));
                     SaveAll(persons);
                 }
                 else
